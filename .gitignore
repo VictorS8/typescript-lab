@@ -1,0 +1,19 @@
+# Dependências (o npm recria com `npm install`)
+node_modules/
+
+# Logs do npm
+npm-debug.log*
+
+# Variáveis de ambiente, caso algum exercício use
+.env
+.env.*
+
+# Arquivos do sistema e do editor
+.DS_Store
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Saída de build, caso um dia você desligue o noEmit
+dist/
+*.tsbuildinfo
