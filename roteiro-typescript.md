@@ -1175,8 +1175,8 @@ O `erasableSyntaxOnly` e o `verbatimModuleSyntax` do `tsconfig.json` fazem o VS 
 ## C. Checklist de progresso
 
 - [x] Fase 0: Ambiente
-- [ ] Módulo 1: Variáveis e tipos primitivos
-- [ ] Módulo 2: Operadores e expressões
+- [x] Módulo 1: Variáveis e tipos primitivos
+- [x] Módulo 2: Operadores e expressões
 - [ ] Módulo 3: Condições
 - [ ] Módulo 4: Loops
 - [ ] Módulo 5: Arrays e tuplas
