@@ -25,6 +25,14 @@ Este roteiro tem **4 fases e 21 módulos**, cada um com objetivo, conceitos em o
 
 > Lembrete do fundamento: o VS Code (com o TypeScript) **verifica** os tipos. O Node **executa** removendo os tipos, sem verificar. Por isso olhe sempre os erros no editor ou rode `npm run check` antes de executar.
 
+> **Windows e macOS:** quase tudo neste roteiro funciona igual no Linux, no Windows e no macOS, porque quem executa o código é o Node, e ele se comporta do mesmo jeito nos três sistemas.
+
+| Módulos | No Windows e no macOS | Por quê |
+|---------|-----------------------|---------|
+| 0 | Instale a mesma versão do Node das outras máquinas e rode `npm ci` | Executar `.ts` direto depende de um Node recente |
+| 1 a 11 e 13 a 20 | Nada muda | O código não depende do sistema |
+| 12 e 21 | Cuidado com caminhos e com o fim de linha dos arquivos | O Windows usa `\` nos caminhos e pode salvar arquivos com CRLF |
+
 ---
 
 # FASE 0: AMBIENTE
@@ -102,6 +110,12 @@ Crie o `tsconfig.json`:
 node modulo-01/ex1.ts     # executa um arquivo
 npm run check             # verifica os tipos de TODOS os arquivos da pasta
 ```
+
+> **Windows e macOS:** os comandos acima são os mesmos. O que muda é a preparação da máquina:
+> 1. **Instale o Node:** `winget install OpenJS.NodeJS.LTS` no Windows ou `brew install node` no macOS. Depois feche todas as janelas do VS Code, abra de novo e confira com `node -v`.
+> 2. **Use a mesma versão do Node em todas as máquinas.** O Node só executa `.ts` direto, sem configuração, a partir da versão 22.18. Numa versão mais antiga, `node modulo-01/ex1.ts` dá erro.
+> 3. **Ao trocar de máquina, rode `npm ci`** em vez de `npm install`. Ele instala exatamente as versões do `package-lock.json`, então o `tsc` fica igual nas duas máquinas.
+> 4. **No Windows, o terminal do VS Code é o PowerShell.** Se o `npm` não for reconhecido ou for bloqueado, veja o Apêndice D.
 
 **Exercício 0.1:** crie `modulo-00/teste.ts` com `const x: number = "texto";`. Rode `npm run check` e leia o erro. Depois rode `node modulo-00/teste.ts` e observe que ele executa mesmo assim. Corrija o erro e rode `npm run check` de novo até não aparecer nada.
 
@@ -713,6 +727,10 @@ Execute com `node modulo-12/main.ts`.
 2. Crie `tipos.ts` só com tipos (`Produto`, `Categoria`) e importe com `import type`. Depois tente sem o `type` e leia o erro do editor.
 3. Use `node:fs/promises` para ler um arquivo `dados.txt` e imprimir quantas linhas ele tem.
 
+> **Windows e macOS:** dois cuidados ao trabalhar com arquivos.
+> 1. **Caminhos:** escreva com `/`, como em `"modulo-12/dados.txt"`, que funciona nos três sistemas. A barra invertida `\` só funciona no Windows e, dentro de uma string, ainda vira caractere de escape (`"\n"` é uma quebra de linha). Para montar caminhos, use `join` de `node:path`: `import { join } from "node:path";` e depois `join("modulo-12", "dados.txt")`.
+> 2. **Fim de linha (exercício 3):** no Windows, o `dados.txt` pode ser salvo com a quebra de linha CRLF (`\r\n`) em vez de LF (`\n`). O `split("\n")` conta as linhas certo, mas deixa um `\r` invisível no fim de cada uma, e aí `linha === "abc"` dá `false`. Use `texto.split(/\r?\n/)`, que aceita os dois formatos. O `/\r?\n/` é uma expressão regular que significa "um `\r` opcional seguido de `\n`".
+
 **Desafio:** organize o código da `Biblioteca` (módulo 11) em arquivos: `modelos.ts`, `biblioteca.ts` e `main.ts`.
 
 **Leitura:** [Modules](https://www.typescriptlang.org/docs/handbook/2/modules.html), [Node.js: Determining module system](https://nodejs.org/api/typescript.html#determining-module-system)
@@ -1124,6 +1142,8 @@ try {
 7. Testes para o serviço (adicionar, concluir, filtrar).
 8. `npm run check` sem nenhum erro.
 
+> **Windows e macOS:** o caminho do `tarefas.json` segue a regra do Módulo 12: use `/` ou `join` de `node:path`, nunca `\`. O fim de linha não atrapalha aqui, porque o `JSON.parse` aceita tanto CRLF quanto LF.
+
 **Conceitos aplicados por módulo:**
 
 | Parte do projeto | Módulos |
@@ -1197,6 +1217,16 @@ O `erasableSyntaxOnly` e o `verbatimModuleSyntax` do `tsconfig.json` fazem o VS 
 - [ ] Módulo 20: Assincronismo
 - [ ] Módulo 21: Projeto final
 
+## D. Erros comuns no Windows e no macOS
+
+| Erro | Por quê | Como resolver |
+|------|---------|---------------|
+| `npm` não é reconhecido como nome de cmdlet | O VS Code foi aberto antes de instalar o Node e guardou o `PATH` antigo | Feche **todas** as janelas do VS Code e abra de novo. Só abrir outra aba do terminal não basta |
+| `npm.ps1` não pode ser carregado porque a execução de scripts foi desabilitada | A política padrão do PowerShell bloqueia scripts `.ps1`, e no PowerShell o `npm` é um deles | Rode uma vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. Vale só para o seu usuário e não pede administrador |
+| `'tsc' não é reconhecido` ao rodar `npm run check` | A pasta `node_modules` não existe nesta máquina | Rode `npm ci` |
+| Erro dizendo que `&&` não é um separador válido | O PowerShell 5.1 (o padrão do Windows) não tem `&&` | Rode um comando por vez, ou separe com `;` (ele roda o segundo mesmo se o primeiro falhar) |
+| Uma linha lida de arquivo vem como `"abc\r"` em vez de `"abc"` | O arquivo foi salvo com CRLF | Use `split(/\r?\n/)` (Módulo 12) |
+
 ---
 
 ## Fontes
@@ -1207,3 +1237,7 @@ O `erasableSyntaxOnly` e o `verbatimModuleSyntax` do `tsconfig.json` fazem o VS 
 - [Node.js: Test runner](https://nodejs.org/api/test.html): módulo 14.
 - [MDN Web Docs: Guia de JavaScript (pt-BR)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide): fundamentos da fase 1, que o próprio Handbook recomenda estudar pela MDN.
 - [JSONPlaceholder](https://jsonplaceholder.typicode.com/): API pública gratuita usada nos exercícios do módulo 20.
+- [npm ci](https://docs.npmjs.com/cli/commands/npm-ci): instalação com as versões exatas do `package-lock.json` (módulo 0).
+- [Node.js: path.join](https://nodejs.org/api/path.html#pathjoinpaths): caminhos que funcionam em qualquer sistema (módulos 12 e 21).
+- [PowerShell: políticas de execução](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies): erro do `npm.ps1` (apêndice D).
+- [PowerShell: variáveis de ambiente](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_environment_variables): por que o `PATH` antigo continua no terminal (apêndice D).

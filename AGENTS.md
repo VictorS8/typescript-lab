@@ -11,6 +11,7 @@ Este projeto é um estudo de TypeScript do zero, seguindo o arquivo [roteiro-typ
 2. **Verifique o código.**
    - Rode `npm run check` e veja os erros do arquivo.
    - Rode `node <arquivo>` para ver a saída real (no módulo 14, `node --test <arquivo>.test.ts`). Não rode arquivos que leem do teclado.
+   - Esses comandos são os mesmos no Linux, no Windows e no macOS. No Windows, o terminal pode ser o PowerShell 5.1, que não tem `&&`: rode um comando por vez.
    - Confira se a solução faz **tudo** o que o enunciado pede e se usa o conceito que o módulo quer ensinar.
 3. **Responda com:**
    - **Resultado:** verificação de tipos, execução e se atende ao enunciado.
