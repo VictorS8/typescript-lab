@@ -1199,7 +1199,7 @@ O `erasableSyntaxOnly` e o `verbatimModuleSyntax` do `tsconfig.json` fazem o VS 
 - [x] Módulo 2: Operadores e expressões
 - [x] Módulo 3: Condições
 - [x] Módulo 4: Loops
-- [ ] Módulo 5: Arrays e tuplas
+- [x] Módulo 5: Arrays e tuplas
 - [ ] Módulo 6: Funções
 - [ ] Módulo 7: Objetos, type e interface
 - [ ] Módulo 8: Union, literal types e null
